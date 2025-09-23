@@ -31,8 +31,8 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex gap-6 text-gray-700 font-medium">
             <Link to="/" className="hover:text-blue-600">Home</Link>
-            <Link to="/about" className="hover:text-blue-600">About</Link>
-            <Link to="/contact" className="hover:text-blue-600">Contact</Link>
+          {/*   <Link to="/about" className="hover:text-blue-600">About</Link> */}
+          {/*   <Link to="/contact" className="hover:text-blue-600">Contact</Link> */}
           </nav>
 
           {/* Wishlist + Cart */}

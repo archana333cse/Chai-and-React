@@ -3,13 +3,17 @@ import Header from "../components/Header";
 import BannerCarousel from "../components/BannerCarousel";
 import Footer from "../components/Footer";
 import CategorySection from "../components/CategorySection";
+import p1 from "../assets/banner/p1.png";
 
 export default function Home() {
   const sampleProducts = [
-    { title: "Product 1", price: 1999, image: "https://via.placeholder.com/300" },
+    { title: "OnePlus Nord CE4 Lite", price: 16694, image: p1 },
     { title: "Product 2", price: 2999, image: "https://via.placeholder.com/300" },
     { title: "Product 3", price: 3999, image: "https://via.placeholder.com/300" },
     { title: "Product 4", price: 4999, image: "https://via.placeholder.com/300" },
+     { title: "Product 5", price: 3999, image: "https://via.placeholder.com/300" },
+    { title: "Product 6", price: 4999, image: "https://via.placeholder.com/300" },
+     
   ];
 
   return (
