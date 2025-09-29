@@ -10,10 +10,10 @@ app.use(bodyParser.json());
 
 // Setup MySQL connection
 const db = mysql.createConnection({
-  host: 'localhost',       
-  user: 'root',           
+  host: 'localhost',
+  user: 'root',
   password: '',
-  database: 'myapp'       
+  database: 'myapp'
 });
 
 // Connect to MySQL
@@ -25,26 +25,22 @@ db.connect(err => {
   console.log('Connected to MySQL');
 });
 
-// Signup route
+// ================= SIGNUP =================
 app.post('/signup', async (req, res) => {
   const { fullName, email, password } = req.body;
 
-  // Basic validation
   if (!fullName || !email || !password) {
     return res.status(400).json({ message: 'Please fill all fields' });
   }
 
-  // Check if user already exists
   db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
     if (err) return res.status(500).json({ message: 'Database error' });
 
     if (results.length > 0) {
       return res.status(409).json({ message: 'User already exists' });
     } else {
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Insert new user
       db.query(
         'INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)',
         [fullName, email, hashedPassword],
@@ -58,7 +54,41 @@ app.post('/signup', async (req, res) => {
   });
 });
 
-// Start server
+// ================= LOGIN =================
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please enter both email and password' });
+  }
+
+  db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
+    if (err) return res.status(500).json({ message: 'Database error' });
+
+    if (results.length === 0) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    const user = results[0];
+
+    // compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    return res.json({
+      message: 'Login successful',
+      user: {
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email
+      }
+    });
+  });
+});
+
+// ================= START SERVER =================
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

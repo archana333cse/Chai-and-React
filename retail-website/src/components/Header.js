@@ -1,10 +1,25 @@
 // src/components/Header.js
-import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, User, Search } from "lucide-react";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ShoppingCart, Heart, User, Search, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function Header() {
   const [showMenu, setShowMenu] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  // Get logged-in user from localStorage
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) setUser(storedUser);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setShowMenu(false);
+    navigate("/"); // redirect to home
+  };
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -31,8 +46,6 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex gap-6 text-gray-700 font-medium">
             <Link to="/" className="hover:text-blue-600">Home</Link>
-          {/*   <Link to="/about" className="hover:text-blue-600">About</Link> */}
-          {/*   <Link to="/contact" className="hover:text-blue-600">Contact</Link> */}
           </nav>
 
           {/* Wishlist + Cart */}
@@ -44,36 +57,54 @@ export default function Header() {
               <ShoppingCart size={22} />
             </Link>
 
-            {/* Login / Signup Dropdown */}
+            {/* User Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="flex items-center gap-1 hover:text-blue-600"
               >
                 <User size={22} />
-                <span className="hidden md:inline">Login</span>
+                <span className="hidden md:inline">
+                  {user ? `Hi, ${user.fullName.split(" ")[0]}` : "Login"}
+                </span>
               </button>
 
               {showMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200 z-50">
-                  <Link
-                    to="/login"
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Sign Up
-                  </Link>
-                  <Link
-                    to="/guest"
-                    className="block px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    Continue as Guest
-                  </Link>
+                  {user ? (
+                    <>
+                      <span className="block px-4 py-2 text-sm text-gray-700">
+                        {user.fullName}
+                      </span>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 flex items-center gap-2"
+                      >
+                        <LogOut size={16} /> Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/signup"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Sign Up
+                      </Link>
+                      <Link
+                        to="/guest"
+                        className="block px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        Continue as Guest
+                      </Link>
+                    </>
+                  )}
                 </div>
               )}
             </div>
