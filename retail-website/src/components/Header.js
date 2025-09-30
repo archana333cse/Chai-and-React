@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        
+
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-blue-600 flex items-center gap-2">
           🛍️ MyRetail
@@ -46,7 +46,13 @@ export default function Header() {
         <div className="flex items-center gap-6">
           <nav className="hidden md:flex gap-6 text-gray-700 font-medium">
             <Link to="/" className="hover:text-blue-600">Home</Link>
+            {user && (
+            <Link to="/orders" className="hover:text-blue-600">
+              My Orders
+            </Link>
+          )}
           </nav>
+          
 
           {/* Wishlist + Cart */}
           <div className="flex items-center gap-4 text-gray-700">
