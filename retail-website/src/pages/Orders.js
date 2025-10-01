@@ -5,15 +5,15 @@ export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const loggedUser = JSON.parse(localStorage.getItem("user"));
-    if (loggedUser) {
-      setUser(loggedUser);
-      const ordersKey = `orders_${loggedUser.email}`;
-      const storedOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
-      setOrders(storedOrders.reverse()); // newest first
-    }
-  }, []);
+ useEffect(() => {
+  const loggedUser = JSON.parse(localStorage.getItem("user"));
+  if (loggedUser) {
+    setUser(loggedUser);
+    const ordersKey = `orders_${loggedUser.email}`;  // ✅ must match Checkout.js
+    const storedOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+    setOrders(storedOrders.reverse());
+  }
+}, []);
 
   return (
     <div>
@@ -31,16 +31,27 @@ export default function Orders() {
                 <p>Date: {order.orderDate}</p>
                 <p>Payment: {order.paymentMethod}</p>
                 <p>Delivery Address: {order.address}</p>
+                {order.status && <p>Status: {order.status}</p>}
+
                 <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {order.items.map((item) => (
                     <div key={item.id} className="bg-gray-100 p-2 rounded">
-                      <img src={item.image} alt={item.title} className="w-full h-24 object-cover" />
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-24 object-cover rounded"
+                      />
                       <p className="text-sm font-semibold">{item.title}</p>
-                      <p>₹{item.price} x {item.quantity}</p>
+                      <p>
+                        ₹{item.price} x {item.quantity}
+                      </p>
                     </div>
                   ))}
                 </div>
-                <p className="mt-2 font-bold">Total: ₹{order.totalPrice + 40 + 10}</p>
+
+                <p className="mt-2 font-bold">
+                  Total: ₹{order.totalPrice + order.deliveryCharge + order.platformFee}
+                </p>
               </div>
             ))
           )}

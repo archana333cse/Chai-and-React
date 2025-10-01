@@ -27,34 +27,38 @@ export default function Checkout() {
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handlePlaceOrder = () => {
-    if (!address) {
-      alert("Please enter your delivery address.");
-      return;
-    }
+  if (!address) {
+    alert("Please enter your delivery address.");
+    return;
+  }
 
-    const order = {
-      orderId: "ORD" + Date.now(),
-      items: cart,
-      totalPrice,
-      deliveryCharge,
-      platformFee,
-      address,
-      paymentMethod,
-      orderDate: new Date().toLocaleString(),
-    };
-
-    // Store order in localStorage
-    const ordersKey = `orders_${user.email}`;
-    let orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
-    orders.push(order);
-    localStorage.setItem(ordersKey, JSON.stringify(orders));
-
-    // Clear cart
-    localStorage.setItem(`cart_${user.email}`, JSON.stringify([]));
-
-    alert("Order placed successfully!");
-    navigate("/orders");
+  const order = {
+    orderId: "ORD" + Date.now(),
+    items: cart,
+    totalPrice,
+    deliveryCharge,
+    platformFee,
+    address,
+    paymentMethod,
+    orderDate: new Date().toLocaleString(),
+    status: "Processing",
   };
+
+  const ordersKey = `orders_${user.email}`;
+  let orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+  orders.push(order);
+  localStorage.setItem(ordersKey, JSON.stringify(orders));
+
+  // ✅ clear cart in localStorage AND state
+  const cartKey = `cart_${user.email}`;
+  localStorage.setItem(cartKey, JSON.stringify([]));
+  setCart([]); // clear state too
+
+  alert("Order placed successfully!");
+  navigate("/orders");
+};
+
+
 
   return (
     <div>
