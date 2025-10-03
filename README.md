@@ -17,9 +17,6 @@ A simple full-stack e-commerce app built with **React.js, Node.js, and MySQL**.
 
 
 
-
-
-
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
