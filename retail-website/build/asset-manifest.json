@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/Chai-and-React/retail-website/static/css/main.42adc94f.css",
+    "main.js": "/Chai-and-React/retail-website/static/js/main.e3e72884.js",
+    "static/js/453.53533e8a.chunk.js": "/Chai-and-React/retail-website/static/js/453.53533e8a.chunk.js",
+    "static/media/p1.png": "/Chai-and-React/retail-website/static/media/p1.9828530a65c83d41109f.png",
+    "static/media/p2.jpg": "/Chai-and-React/retail-website/static/media/p2.bbd735db6807613a068e.jpg",
+    "static/media/banner1.jpg": "/Chai-and-React/retail-website/static/media/banner1.4cf5344c737507f167ee.jpg",
+    "static/media/banner3.jpg": "/Chai-and-React/retail-website/static/media/banner3.d98efcab9623f46fefe8.jpg",
+    "static/media/banner2.jpg": "/Chai-and-React/retail-website/static/media/banner2.6272ced717a980ce3696.jpg",
+    "static/media/p3.avif": "/Chai-and-React/retail-website/static/media/p3.08f9a4aef7b0d250c93a.avif",
+    "index.html": "/Chai-and-React/retail-website/index.html",
+    "main.42adc94f.css.map": "/Chai-and-React/retail-website/static/css/main.42adc94f.css.map",
+    "main.e3e72884.js.map": "/Chai-and-React/retail-website/static/js/main.e3e72884.js.map",
+    "453.53533e8a.chunk.js.map": "/Chai-and-React/retail-website/static/js/453.53533e8a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.42adc94f.css",
+    "static/js/main.e3e72884.js"
+  ]
+}
