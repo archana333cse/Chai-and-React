@@ -25,6 +25,24 @@ db.connect(err => {
   console.log('Connected to MySQL');
 });
 
+// Fetch all products
+app.get('/products', (req, res) => {
+  db.query('SELECT * FROM products', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// Optional: Fetch products by category (if you add category field later)
+app.get('/products/category/:category', (req, res) => {
+  const { category } = req.params;
+  db.query('SELECT * FROM products WHERE category = ?', [category], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+
 // ================= SIGNUP =================
 app.post('/signup', async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -90,6 +108,23 @@ app.post('/login', (req, res) => {
     });
   });
 });
+
+// Search products by title, brand, or description
+app.get('/search', (req, res) => {
+  const { q } = req.query;
+  if (!q) return res.status(400).json({ error: 'Query is required' });
+
+  const sql = `
+    SELECT * FROM products
+    WHERE title LIKE ? OR brand LIKE ? OR description LIKE ?
+  `;
+  const searchTerm = `%${q}%`;
+  db.query(sql, [searchTerm, searchTerm, searchTerm], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
 
 // ================= START SERVER =================
 const PORT = 5000;

@@ -2,11 +2,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Heart, User, Search, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Header() {
   const [showMenu, setShowMenu] = useState(false);
   const [user, setUser] = useState(null);
+   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  
+   const handleSearch = async () => {
+    if (!searchTerm.trim()) return;
+    navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+  };
 
   // Get logged-in user from localStorage
   useEffect(() => {
@@ -32,14 +39,19 @@ export default function Header() {
 
         {/* Search Bar */}
         <div className="hidden md:flex flex-1 mx-6">
-          <input
-            type="text"
-            placeholder="Search for products, brands and more"
-            className="w-full px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button className="bg-blue-600 text-white px-4 rounded-r-full hover:bg-blue-700">
-            <Search size={20} />
-          </button>
+         <input
+        type="text"
+        placeholder="Search for products, brands and more"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full px-4 py-2 rounded-l-full border border-gray-300"
+      />
+      <button
+        onClick={handleSearch}
+        className="bg-blue-600 text-white px-4 rounded-r-full"
+      >
+        <Search size={20} />
+      </button>
         </div>
 
         {/* Nav + Icons */}
