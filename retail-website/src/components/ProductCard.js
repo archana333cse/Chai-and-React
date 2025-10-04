@@ -73,9 +73,10 @@ export default function ProductCard({ id, title, price, image }) {
 
   return (
     <div
-      onClick={handleCardClick}
-      className="bg-white shadow rounded-lg p-4 w-60 cursor-pointer relative hover:shadow-lg transition"
-    >
+  onClick={handleCardClick}
+  className="bg-white shadow rounded-lg p-4 w-full cursor-pointer relative hover:shadow-lg transition"
+>
+
       {/* Wishlist Icon */}
       <button
         onClick={toggleWishlist}

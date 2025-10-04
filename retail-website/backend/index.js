@@ -42,10 +42,13 @@ app.post('/signup', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       db.query(
-        'INSERT INTO users (full_name, email, password) VALUES (?, ?, ?)',
+        'INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)',
         [fullName, email, hashedPassword],
         (err, results) => {
-          if (err) return res.status(500).json({ message: 'Database error' });
+          if (err) {
+            console.error('Insert error:', err); 
+            return res.status(500).json({ message: 'Database error' });
+          }
 
           return res.status(201).json({ message: 'User created successfully' });
         }
@@ -72,7 +75,7 @@ app.post('/login', (req, res) => {
     const user = results[0];
 
     // compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
