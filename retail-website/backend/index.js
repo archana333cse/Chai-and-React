@@ -3,9 +3,35 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const bcrypt = require('bcryptjs');
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
+
+// Middleware to protect routes
+const authenticate = (req, res, next) => {
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // attach user info to request
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+  origin: "http://localhost:3000", // your frontend URL
+  credentials: true // allow cookies to be sent
+}));
+
+const JWT_SECRET = "mySuperSecretKey123!@#";
+const JWT_EXPIRES_IN = "1h";
+
+//app.use(cors());
 app.use(bodyParser.json());
 
 // Setup MySQL connection
@@ -71,11 +97,25 @@ app.post('/login', (req, res) => {
 
     const user = results[0];
 
-    // compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, fullName: user.full_name, email: user.email },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    // Set token as HTTP-only cookie
+    res.cookie("access_token", token, {
+      httpOnly: true,
+      secure: false, // set to true if using HTTPS
+      sameSite: "Lax",
+      maxAge: 3600000 // 1 hour
+    });
 
     return res.json({
       message: 'Login successful',
@@ -86,6 +126,12 @@ app.post('/login', (req, res) => {
       }
     });
   });
+});
+
+// ================= LOGOUT =================
+app.post("/logout", (req, res) => {
+  res.clearCookie("access_token"); // remove the HTTP-only cookie
+  res.json({ message: "Logged out successfully" });
 });
 
 // ================= START SERVER =================

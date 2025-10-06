@@ -15,10 +15,11 @@ export default function Login() {
 
     try {
       const res = await fetch("http://localhost:5000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password }),
+  credentials: "include" // important to send/receive cookies
+});
 
       const data = await res.json();
 
